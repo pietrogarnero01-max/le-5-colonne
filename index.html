@@ -1358,6 +1358,108 @@
       box-shadow: 0 10px 18px rgba(250,204,21,0.28);
     }
 
+    .card.center-reveal-glow {
+      border-color: #facc15;
+      box-shadow:
+        0 0 0 3px rgba(250,204,21,0.26),
+        0 0 24px rgba(250,204,21,0.82),
+        0 8px 18px rgba(0,0,0,0.35);
+      animation: centerCardGlow 1.15s ease-in-out infinite;
+    }
+
+    @keyframes centerCardGlow {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 0 0 3px rgba(250,204,21,0.22),
+          0 0 18px rgba(250,204,21,0.55),
+          0 8px 18px rgba(0,0,0,0.35);
+      }
+      50% {
+        transform: scale(1.035);
+        box-shadow:
+          0 0 0 4px rgba(250,204,21,0.32),
+          0 0 30px rgba(250,204,21,0.95),
+          0 10px 22px rgba(0,0,0,0.38);
+      }
+    }
+
+    body.theme-regale .card.center-reveal-glow {
+      border-color: #E4C45E;
+      box-shadow:
+        0 0 0 3px rgba(228,196,94,0.26),
+        0 0 24px rgba(228,196,94,0.82),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    body.theme-notturno .card.center-reveal-glow {
+      border-color: #67E8F9;
+      box-shadow:
+        0 0 0 3px rgba(103,232,249,0.22),
+        0 0 24px rgba(103,232,249,0.70),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    body.theme-aurora .card.center-reveal-glow {
+      border-color: #14B8A6;
+      box-shadow:
+        0 0 0 3px rgba(20,184,166,0.24),
+        0 0 24px rgba(20,184,166,0.74),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    .card.ability-target-glow {
+      border-color: #38bdf8;
+      box-shadow:
+        0 0 0 3px rgba(56,189,248,0.24),
+        0 0 22px rgba(56,189,248,0.72),
+        0 8px 18px rgba(0,0,0,0.35);
+      animation: abilityTargetGlow 1.05s ease-in-out infinite;
+    }
+
+    @keyframes abilityTargetGlow {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 0 0 2px rgba(56,189,248,0.18),
+          0 0 16px rgba(56,189,248,0.50),
+          0 8px 18px rgba(0,0,0,0.35);
+      }
+      50% {
+        transform: scale(1.045);
+        box-shadow:
+          0 0 0 4px rgba(56,189,248,0.30),
+          0 0 28px rgba(56,189,248,0.90),
+          0 10px 22px rgba(0,0,0,0.38);
+      }
+    }
+
+    body.theme-regale .card.ability-target-glow {
+      border-color: #E4C45E;
+      box-shadow:
+        0 0 0 3px rgba(228,196,94,0.24),
+        0 0 22px rgba(228,196,94,0.74),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    body.theme-notturno .card.ability-target-glow {
+      border-color: #67E8F9;
+      box-shadow:
+        0 0 0 3px rgba(103,232,249,0.22),
+        0 0 22px rgba(103,232,249,0.72),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    body.theme-aurora .card.ability-target-glow {
+      border-color: #14B8A6;
+      box-shadow:
+        0 0 0 3px rgba(20,184,166,0.24),
+        0 0 22px rgba(20,184,166,0.76),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+
+
     .card-corner {
       position: absolute;
       left: 5px;
@@ -3499,16 +3601,19 @@
       for (let i = 0; i < 5; i++) {
         const col = document.createElement('div');
         col.className = 'column';
-        if (game.lastPlayedColumnIndex === i && game.phase === 'revealCenter') col.classList.add('selected');
 
         const center = game.centerCards[i];
         const centerEl = createCardElement(center, center.revealed, true);
+        if (game.lastPlayedColumnIndex === i && game.phase === 'revealCenter' && !center.revealed) {
+          centerEl.classList.add('center-reveal-glow');
+        }
         const selectedCard = getSelectedCard();
         const canRevealNormally = isMyTurn() && game.phase === 'revealCenter' && i === game.lastPlayedColumnIndex && !center.revealed;
         const canUseKing = isMyTurn() && game.phase === 'selectColumn' && selectedCard && selectedCard.rank === 'K' && !center.revealed;
 
         if (canRevealNormally || canUseKing) {
           centerEl.classList.add('clickable');
+          if (canUseKing) centerEl.classList.add('ability-target-glow');
           centerEl.onclick = (e) => {
             e.stopPropagation();
             handleCenterClick(i);
@@ -3555,7 +3660,7 @@
         const isOwnHidden = playerIndex === myPlayer && !card.revealed;
 
         if (isMyTurn() && game.phase === 'selectColumn' && selectedCard && selectedCard.rank === 'J' && isOpponentHidden) {
-          el.classList.add('clickable');
+          el.classList.add('clickable', 'ability-target-glow');
           el.onclick = (e) => {
             e.stopPropagation();
             useJackDirect(playerIndex, columnIndex, cardIndex);
@@ -3563,7 +3668,7 @@
         }
 
         if (isMyTurn() && game.phase === 'selectColumn' && selectedCard && selectedCard.rank === 'Q' && isOwnHidden) {
-          el.classList.add('clickable');
+          el.classList.add('clickable', 'ability-target-glow');
           el.onclick = (e) => {
             e.stopPropagation();
             selectQueenBoardCard(columnIndex, cardIndex);
@@ -3650,6 +3755,9 @@
         const el = createCardElement(card, true);
         if (isMyTurn() && (game.phase === 'selectCard' || game.phase === 'selectColumn' || game.phase === 'abilityQueenHand')) {
           el.classList.add('clickable');
+          if (game.phase === 'abilityQueenHand' && index !== selectedHandIndex) {
+            el.classList.add('ability-target-glow');
+          }
           el.onclick = () => handleHandClick(index);
         }
         if (selectedHandIndex === index) el.classList.add('selected');
