@@ -360,6 +360,701 @@
       .decor-card-2 { right: 80px; bottom: 120px; }
     }
 
+
+    .theme-carousel {
+      position: relative;
+      display: grid;
+      grid-template-columns: 46px 1fr 46px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      min-height: 170px;
+      perspective: 900px;
+    }
+
+    .theme-stage {
+      position: relative;
+      height: 154px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      overflow: hidden;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.08), transparent 46%),
+        linear-gradient(90deg, rgba(0,0,0,0.22), rgba(255,255,255,0.04), rgba(0,0,0,0.22));
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .theme-stage::before,
+    .theme-stage::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 24%;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .theme-stage::before {
+      left: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.45), transparent);
+    }
+
+    .theme-stage::after {
+      right: 0;
+      background: linear-gradient(270deg, rgba(0,0,0,0.45), transparent);
+    }
+
+    .theme-arrow {
+      width: 44px;
+      height: 70px;
+      border-radius: 999px;
+      font-size: 36px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(250,204,21,0.92);
+      color: #1f2937;
+      z-index: 10;
+    }
+
+    .theme-card {
+      position: absolute;
+      width: min(330px, 86%);
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.28);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.20);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.24);
+      transition:
+        transform 0.45s cubic-bezier(.2,.8,.2,1),
+        opacity 0.35s ease,
+        filter 0.35s ease,
+        border-color 0.2s ease;
+      transform-origin: center center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .theme-card:hover {
+      background: rgba(255,255,255,0.10);
+    }
+
+    .theme-card.active {
+      border-color: rgba(250,204,21,0.85);
+      box-shadow:
+        0 0 0 2px rgba(250,204,21,0.20),
+        0 18px 34px rgba(0,0,0,0.30);
+    }
+
+    .theme-card.is-current {
+      pointer-events: auto;
+      transform: translateX(0) translateZ(90px) scale(1.08);
+      opacity: 1;
+      filter: blur(0) brightness(1.08);
+      z-index: 5;
+    }
+
+    .theme-card.is-left {
+      transform: translateX(-42%) translateZ(-120px) rotateY(54deg) scale(0.72);
+      opacity: 0;
+      filter: blur(2px) brightness(0.70);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .theme-card.is-right {
+      transform: translateX(42%) translateZ(-120px) rotateY(-54deg) scale(0.72);
+      opacity: 0;
+      filter: blur(2px) brightness(0.70);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .theme-card.is-hidden {
+      transform: translateX(0) translateZ(-220px) scale(0.55);
+      opacity: 0;
+      filter: blur(3px);
+      z-index: 1;
+    }
+
+    .theme-card small {
+      color: rgba(255,255,255,0.78);
+      font-weight: normal;
+    }
+
+    .theme-preview {
+      flex: 0 0 54px;
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      border: 2px solid rgba(255,255,255,0.32);
+      box-shadow: inset 0 0 0 5px rgba(0,0,0,0.12);
+    }
+
+    .classic-preview {
+      background:
+        radial-gradient(circle at 70% 22%, rgba(250,204,21,0.70), transparent 18%),
+        linear-gradient(135deg, #14532d 0%, #0f3f24 52%, #1d4ed8 53%, #1e3a8a 100%);
+    }
+
+    .theme-message {
+      margin-top: 12px;
+      color: #fde68a;
+      font-weight: bold;
+    }
+
+    .theme-help {
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+    }
+
+    body.theme-classic {
+      --theme-name: 'Classico';
+    }
+
+    body.theme-regale {
+      --theme-name: 'Regale';
+    }
+
+    body.theme-notturno {
+      --theme-name: 'Notturno';
+    }
+
+    body.theme-aurora {
+      --theme-name: 'Aurora';
+    }
+
+
+    .regale-preview {
+      background:
+        radial-gradient(circle at 74% 22%, #E4C45E 0 12%, transparent 13%),
+        linear-gradient(135deg, #291E13 0%, #291E13 42%, #9B111E 43%, #9B111E 67%, #054D95 68%, #054D95 100%);
+    }
+
+    body.theme-regale {
+      background:
+        radial-gradient(circle at top, rgba(228,196,94,0.10), transparent 30%),
+        radial-gradient(circle at bottom, rgba(0,0,0,0.30), transparent 38%),
+        linear-gradient(180deg, #291E13 0%, #1f160d 52%, #110c07 100%);
+      color: #fff8df;
+    }
+
+    body.theme-regale .home-screen {
+      background:
+        radial-gradient(circle at 72% 18%, rgba(228,196,94,0.18), transparent 24%),
+        radial-gradient(circle at 38% 70%, rgba(155,17,30,0.18), transparent 30%),
+        linear-gradient(180deg, #291E13 0%, #1f160d 100%);
+    }
+
+    body.theme-regale .home-sidebar {
+      border-right-color: rgba(228,196,94,0.78);
+      background: linear-gradient(180deg, rgba(0,0,0,0.26), rgba(228,196,94,0.05));
+    }
+
+    body.theme-regale .home-title-box,
+    body.theme-regale .home-rules-button,
+    body.theme-regale .oval-button,
+    body.theme-regale .singleplayer-menu.home-menu .singleplayer-main {
+      border-color: #E4C45E;
+      color: #fff8df;
+      background: rgba(0,0,0,0.18);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.24), 0 0 0 1px rgba(228,196,94,0.10);
+    }
+
+    body.theme-regale .home-title-box {
+      text-shadow: 0 4px 12px rgba(0,0,0,0.65);
+    }
+
+    body.theme-regale .home-subtitle,
+    body.theme-regale .theme-card small {
+      color: rgba(255,248,223,0.82);
+    }
+
+    body.theme-regale button {
+      background: #E4C45E;
+      color: #291E13;
+    }
+
+    body.theme-regale button:hover {
+      background: #f1d77a;
+    }
+
+    body.theme-regale .status-box,
+    body.theme-regale .actions,
+    body.theme-regale .hand,
+    body.theme-regale .log,
+    body.theme-regale .home-panel,
+    body.theme-regale .rules-box,
+    body.theme-regale .final-card,
+    body.theme-regale .final-score-box,
+    body.theme-regale .leaderboard-row,
+    body.theme-regale .podium-card,
+    body.theme-regale .theme-card {
+      background: linear-gradient(180deg, rgba(0,0,0,0.34), rgba(228,196,94,0.06));
+      border-color: rgba(228,196,94,0.22);
+    }
+
+    body.theme-regale #turnTitle,
+    body.theme-regale .column h3,
+    body.theme-regale .player-zone-title,
+    body.theme-regale .final-card h3,
+    body.theme-regale .leaderboard-name,
+    body.theme-regale .podium-name,
+    body.theme-regale .theme-message {
+      color: #E4C45E;
+    }
+
+    body.theme-regale .columns {
+      background:
+        radial-gradient(circle at top, rgba(228,196,94,0.07), transparent 22%),
+        linear-gradient(180deg, rgba(228,196,94,0.05), rgba(0,0,0,0.14));
+      border-color: rgba(228,196,94,0.16);
+    }
+
+    body.theme-regale .column {
+      background:
+        linear-gradient(180deg, rgba(228,196,94,0.10), rgba(0,0,0,0.16)),
+        linear-gradient(180deg, rgba(41,30,19,0.74), rgba(25,18,11,0.82));
+      border-color: rgba(228,196,94,0.22);
+    }
+
+    body.theme-regale .column.selected {
+      border-color: #E4C45E;
+      box-shadow:
+        0 0 0 2px rgba(228,196,94,0.22),
+        0 0 18px rgba(228,196,94,0.56),
+        0 10px 24px rgba(0,0,0,0.28);
+    }
+
+    body.theme-regale .player-zone {
+      background: linear-gradient(180deg, rgba(0,0,0,0.20), rgba(228,196,94,0.05));
+      border-color: rgba(228,196,94,0.18);
+    }
+
+    body.theme-regale .player-zone.active-zone {
+      border-color: #E4C45E;
+      background: linear-gradient(180deg, rgba(228,196,94,0.12), rgba(228,196,94,0.04));
+    }
+
+    body.theme-regale .card {
+      border-color: rgba(228,196,94,0.74);
+      box-shadow:
+        inset 0 0 0 1px rgba(228,196,94,0.18),
+        0 4px 8px rgba(0,0,0,0.42);
+    }
+
+    /* Tema Regale: carte centrali coperte rubino */
+    body.theme-regale .card.back.center-card {
+      background:
+        repeating-linear-gradient(45deg, rgba(228,196,94,0.13) 0 6px, transparent 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px),
+        linear-gradient(145deg, #5f0a12, #9B111E 48%, #6f0c16 100%);
+      border-color: #E4C45E;
+      box-shadow:
+        inset 0 0 0 4px rgba(228,196,94,0.20),
+        inset 0 0 0 8px rgba(41,30,19,0.42),
+        0 4px 8px rgba(0,0,0,0.42);
+    }
+
+    /* Tema Regale: carte coperte in colonna / mano avversaria lapislazzulo */
+    body.theme-regale .card.back:not(.center-card) {
+      background:
+        repeating-linear-gradient(45deg, rgba(228,196,94,0.13) 0 6px, transparent 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px),
+        linear-gradient(145deg, #032f5c, #054D95 48%, #033a72 100%);
+      border-color: #E4C45E;
+      box-shadow:
+        inset 0 0 0 4px rgba(228,196,94,0.20),
+        inset 0 0 0 8px rgba(41,30,19,0.42),
+        0 4px 8px rgba(0,0,0,0.42);
+    }
+
+    body.theme-regale .card.back::before {
+      border-color: rgba(228,196,94,0.88);
+      box-shadow: inset 0 0 0 2px rgba(228,196,94,0.18);
+    }
+
+    body.theme-regale .card.back::after {
+      color: rgba(228,196,94,0.95);
+      border-color: rgba(228,196,94,0.70);
+      background: rgba(41,30,19,0.32);
+    }
+
+    body.theme-regale .card.selected {
+      outline-color: #E4C45E;
+      box-shadow: 0 10px 18px rgba(228,196,94,0.28);
+    }
+
+    body.theme-regale .card.status-hidden {
+      border-color: #054D95;
+    }
+
+    body.theme-regale .card.status-revealed {
+      border-color: #E4C45E;
+    }
+
+    body.theme-regale .final-badge.p1,
+    body.theme-regale .final-badge.p2 {
+      color: #E4C45E;
+      border-color: rgba(228,196,94,0.48);
+    }
+
+    body.theme-regale .leaderboard-row.header {
+      background: rgba(228,196,94,0.17);
+      color: #E4C45E;
+    }
+
+    body.theme-regale .theme-card.active {
+      border-color: #E4C45E;
+      box-shadow: 0 0 0 2px rgba(228,196,94,0.24), 0 12px 22px rgba(0,0,0,0.18);
+    }
+
+
+    .notturno-preview {
+      background:
+        radial-gradient(circle at 72% 22%, #D8DEE9 0 12%, transparent 13%),
+        linear-gradient(135deg, #0B132B 0%, #1C2541 42%, #0E7490 43%, #0E7490 67%, #334155 68%, #334155 100%);
+    }
+
+    .aurora-preview {
+      background:
+        radial-gradient(circle at 72% 22%, #F2C14E 0 12%, transparent 13%),
+        linear-gradient(135deg, #2D1B4E 0%, #4C1D95 42%, #14B8A6 43%, #14B8A6 67%, #DB2777 68%, #DB2777 100%);
+    }
+
+
+    body.theme-regale .final-badge.you {
+      color: #86efac;
+      border-color: rgba(34,197,94,0.48);
+    }
+
+    body.theme-regale .final-badge.opponent {
+      color: #fca5a5;
+      border-color: rgba(239,68,68,0.50);
+    }
+
+    body.theme-notturno .final-badge.you {
+      color: #86efac;
+      border-color: rgba(34,197,94,0.48);
+    }
+
+    body.theme-notturno .final-badge.opponent {
+      color: #fca5a5;
+      border-color: rgba(239,68,68,0.50);
+    }
+
+    body.theme-aurora .final-badge.you {
+      color: #86efac;
+      border-color: rgba(34,197,94,0.48);
+    }
+
+    body.theme-aurora .final-badge.opponent {
+      color: #fca5a5;
+      border-color: rgba(239,68,68,0.50);
+    }
+
+    /* TEMA NOTTURNO */
+    body.theme-notturno {
+      background:
+        radial-gradient(circle at top, rgba(216,222,233,0.08), transparent 30%),
+        radial-gradient(circle at bottom, rgba(14,116,144,0.18), transparent 38%),
+        linear-gradient(180deg, #0B132B 0%, #111827 52%, #020617 100%);
+      color: #E5E7EB;
+    }
+
+    body.theme-notturno .home-screen {
+      background:
+        radial-gradient(circle at 72% 18%, rgba(216,222,233,0.13), transparent 24%),
+        radial-gradient(circle at 38% 70%, rgba(14,116,144,0.22), transparent 30%),
+        linear-gradient(180deg, #0B132B 0%, #111827 100%);
+    }
+
+    body.theme-notturno .home-sidebar {
+      border-right-color: rgba(216,222,233,0.62);
+      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(14,116,144,0.08));
+    }
+
+    body.theme-notturno .home-title-box,
+    body.theme-notturno .home-rules-button,
+    body.theme-notturno .oval-button,
+    body.theme-notturno .singleplayer-menu.home-menu .singleplayer-main {
+      border-color: #D8DEE9;
+      color: #E5E7EB;
+      background: rgba(0,0,0,0.20);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.28), 0 0 0 1px rgba(216,222,233,0.08);
+    }
+
+    body.theme-notturno button {
+      background: #0E7490;
+      color: #F8FAFC;
+    }
+
+    body.theme-notturno button:hover {
+      background: #0891B2;
+    }
+
+    body.theme-notturno .status-box,
+    body.theme-notturno .actions,
+    body.theme-notturno .hand,
+    body.theme-notturno .log,
+    body.theme-notturno .home-panel,
+    body.theme-notturno .rules-box,
+    body.theme-notturno .final-card,
+    body.theme-notturno .final-score-box,
+    body.theme-notturno .leaderboard-row,
+    body.theme-notturno .podium-card,
+    body.theme-notturno .theme-card {
+      background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(14,116,144,0.07));
+      border-color: rgba(216,222,233,0.16);
+    }
+
+    body.theme-notturno #turnTitle,
+    body.theme-notturno .column h3,
+    body.theme-notturno .player-zone-title,
+    body.theme-notturno .final-card h3,
+    body.theme-notturno .leaderboard-name,
+    body.theme-notturno .podium-name,
+    body.theme-notturno .theme-message {
+      color: #D8DEE9;
+    }
+
+    body.theme-notturno .columns {
+      background:
+        radial-gradient(circle at top, rgba(216,222,233,0.06), transparent 22%),
+        linear-gradient(180deg, rgba(14,116,144,0.08), rgba(0,0,0,0.16));
+      border-color: rgba(216,222,233,0.12);
+    }
+
+    body.theme-notturno .column {
+      background:
+        linear-gradient(180deg, rgba(216,222,233,0.06), rgba(0,0,0,0.18)),
+        linear-gradient(180deg, rgba(15,23,42,0.82), rgba(2,6,23,0.88));
+      border-color: rgba(216,222,233,0.16);
+    }
+
+    body.theme-notturno .column.selected {
+      border-color: #67E8F9;
+      box-shadow:
+        0 0 0 2px rgba(103,232,249,0.18),
+        0 0 18px rgba(103,232,249,0.44),
+        0 10px 24px rgba(0,0,0,0.28);
+    }
+
+    body.theme-notturno .player-zone {
+      background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(14,116,144,0.06));
+      border-color: rgba(216,222,233,0.14);
+    }
+
+    body.theme-notturno .player-zone.active-zone {
+      border-color: #67E8F9;
+      background: linear-gradient(180deg, rgba(14,116,144,0.18), rgba(14,116,144,0.05));
+    }
+
+    body.theme-notturno .card {
+      border-color: rgba(216,222,233,0.70);
+      box-shadow:
+        inset 0 0 0 1px rgba(216,222,233,0.12),
+        0 4px 8px rgba(0,0,0,0.44);
+    }
+
+    body.theme-notturno .card.back.center-card {
+      background:
+        repeating-linear-gradient(45deg, rgba(216,222,233,0.13) 0 6px, transparent 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(103,232,249,0.07) 0 6px, transparent 6px 12px),
+        linear-gradient(145deg, #020617, #1C2541 48%, #0B132B 100%);
+      border-color: #D8DEE9;
+    }
+
+    body.theme-notturno .card.back:not(.center-card) {
+      background:
+        repeating-linear-gradient(45deg, rgba(216,222,233,0.12) 0 6px, transparent 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(103,232,249,0.08) 0 6px, transparent 6px 12px),
+        linear-gradient(145deg, #083344, #0E7490 48%, #164E63 100%);
+      border-color: #D8DEE9;
+    }
+
+    body.theme-notturno .card.back::before {
+      border-color: rgba(216,222,233,0.86);
+    }
+
+    body.theme-notturno .card.back::after {
+      color: rgba(216,222,233,0.95);
+      border-color: rgba(216,222,233,0.68);
+      background: rgba(2,6,23,0.34);
+    }
+
+    body.theme-notturno .card.selected {
+      outline-color: #67E8F9;
+      box-shadow: 0 10px 18px rgba(103,232,249,0.22);
+    }
+
+    body.theme-notturno .leaderboard-row.header {
+      background: rgba(14,116,144,0.20);
+      color: #D8DEE9;
+    }
+
+    body.theme-notturno .theme-card.active {
+      border-color: #67E8F9;
+      box-shadow: 0 0 0 2px rgba(103,232,249,0.20), 0 12px 22px rgba(0,0,0,0.18);
+    }
+
+    /* TEMA AURORA */
+    body.theme-aurora {
+      background:
+        radial-gradient(circle at top, rgba(242,193,78,0.10), transparent 30%),
+        radial-gradient(circle at bottom, rgba(20,184,166,0.20), transparent 38%),
+        linear-gradient(180deg, #2D1B4E 0%, #24103F 52%, #12081F 100%);
+      color: #FFF7ED;
+    }
+
+    body.theme-aurora .home-screen {
+      background:
+        radial-gradient(circle at 72% 18%, rgba(242,193,78,0.16), transparent 24%),
+        radial-gradient(circle at 38% 70%, rgba(20,184,166,0.20), transparent 30%),
+        linear-gradient(180deg, #2D1B4E 0%, #24103F 100%);
+    }
+
+    body.theme-aurora .home-sidebar {
+      border-right-color: rgba(242,193,78,0.70);
+      background: linear-gradient(180deg, rgba(0,0,0,0.24), rgba(20,184,166,0.07));
+    }
+
+    body.theme-aurora .home-title-box,
+    body.theme-aurora .home-rules-button,
+    body.theme-aurora .oval-button,
+    body.theme-aurora .singleplayer-menu.home-menu .singleplayer-main {
+      border-color: #F2C14E;
+      color: #FFF7ED;
+      background: rgba(0,0,0,0.18);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.26), 0 0 0 1px rgba(242,193,78,0.08);
+    }
+
+    body.theme-aurora button {
+      background: #F2C14E;
+      color: #2D1B4E;
+    }
+
+    body.theme-aurora button:hover {
+      background: #FFD166;
+    }
+
+    body.theme-aurora .status-box,
+    body.theme-aurora .actions,
+    body.theme-aurora .hand,
+    body.theme-aurora .log,
+    body.theme-aurora .home-panel,
+    body.theme-aurora .rules-box,
+    body.theme-aurora .final-card,
+    body.theme-aurora .final-score-box,
+    body.theme-aurora .leaderboard-row,
+    body.theme-aurora .podium-card,
+    body.theme-aurora .theme-card {
+      background: linear-gradient(180deg, rgba(0,0,0,0.34), rgba(20,184,166,0.07));
+      border-color: rgba(242,193,78,0.18);
+    }
+
+    body.theme-aurora #turnTitle,
+    body.theme-aurora .column h3,
+    body.theme-aurora .player-zone-title,
+    body.theme-aurora .final-card h3,
+    body.theme-aurora .leaderboard-name,
+    body.theme-aurora .podium-name,
+    body.theme-aurora .theme-message {
+      color: #F2C14E;
+    }
+
+    body.theme-aurora .columns {
+      background:
+        radial-gradient(circle at top, rgba(242,193,78,0.07), transparent 22%),
+        linear-gradient(180deg, rgba(20,184,166,0.08), rgba(0,0,0,0.16));
+      border-color: rgba(242,193,78,0.12);
+    }
+
+    body.theme-aurora .column {
+      background:
+        linear-gradient(180deg, rgba(242,193,78,0.07), rgba(0,0,0,0.16)),
+        linear-gradient(180deg, rgba(45,27,78,0.82), rgba(18,8,31,0.88));
+      border-color: rgba(242,193,78,0.18);
+    }
+
+    body.theme-aurora .column.selected {
+      border-color: #14B8A6;
+      box-shadow:
+        0 0 0 2px rgba(20,184,166,0.18),
+        0 0 18px rgba(20,184,166,0.48),
+        0 10px 24px rgba(0,0,0,0.28);
+    }
+
+    body.theme-aurora .player-zone {
+      background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(20,184,166,0.06));
+      border-color: rgba(242,193,78,0.14);
+    }
+
+    body.theme-aurora .player-zone.active-zone {
+      border-color: #14B8A6;
+      background: linear-gradient(180deg, rgba(20,184,166,0.16), rgba(20,184,166,0.05));
+    }
+
+    body.theme-aurora .card {
+      border-color: rgba(242,193,78,0.70);
+      box-shadow:
+        inset 0 0 0 1px rgba(242,193,78,0.12),
+        0 4px 8px rgba(0,0,0,0.42);
+    }
+
+    body.theme-aurora .card.back.center-card {
+      background:
+        repeating-linear-gradient(45deg, rgba(242,193,78,0.13) 0 6px, transparent 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px),
+        linear-gradient(145deg, #831843, #DB2777 48%, #9D174D 100%);
+      border-color: #F2C14E;
+    }
+
+    body.theme-aurora .card.back:not(.center-card) {
+      background:
+        repeating-linear-gradient(45deg, rgba(242,193,78,0.13) 0 6px, transparent 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px),
+        linear-gradient(145deg, #0F766E, #14B8A6 48%, #0E7490 100%);
+      border-color: #F2C14E;
+    }
+
+    body.theme-aurora .card.back::before {
+      border-color: rgba(242,193,78,0.86);
+    }
+
+    body.theme-aurora .card.back::after {
+      color: rgba(242,193,78,0.95);
+      border-color: rgba(242,193,78,0.70);
+      background: rgba(45,27,78,0.34);
+    }
+
+    body.theme-aurora .card.selected {
+      outline-color: #14B8A6;
+      box-shadow: 0 10px 18px rgba(20,184,166,0.24);
+    }
+
+    body.theme-aurora .leaderboard-row.header {
+      background: rgba(242,193,78,0.17);
+      color: #F2C14E;
+    }
+
+    body.theme-aurora .theme-card.active {
+      border-color: #14B8A6;
+      box-shadow: 0 0 0 2px rgba(20,184,166,0.22), 0 12px 22px rgba(0,0,0,0.18);
+    }
+
     /* RULES */
     .rules-box {
       background: rgba(0,0,0,0.35);
@@ -841,6 +1536,24 @@
       background: linear-gradient(135deg, rgba(148,163,184,0.42), transparent 55%);
     }
 
+    .final-card.win-you {
+      border-color: rgba(34,197,94,0.68);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.28), 0 14px 28px rgba(0,0,0,0.18);
+    }
+
+    .final-card.win-you::before {
+      background: linear-gradient(135deg, rgba(34,197,94,0.58), transparent 55%);
+    }
+
+    .final-card.win-opponent {
+      border-color: rgba(239,68,68,0.68);
+      box-shadow: 0 0 0 1px rgba(239,68,68,0.28), 0 14px 28px rgba(0,0,0,0.18);
+    }
+
+    .final-card.win-opponent::before {
+      background: linear-gradient(135deg, rgba(239,68,68,0.54), transparent 55%);
+    }
+
     .final-card h3 {
       text-align: center;
       color: #facc15;
@@ -864,6 +1577,8 @@
 
     .final-badge.p1 { color: #86efac; border-color: rgba(34,197,94,0.48); }
     .final-badge.p2 { color: #fdba74; border-color: rgba(251,146,60,0.48); }
+    .final-badge.you { color: #86efac; border-color: rgba(34,197,94,0.48); }
+    .final-badge.opponent { color: #fca5a5; border-color: rgba(239,68,68,0.50); }
     .final-badge.none { color: #cbd5e1; border-color: rgba(148,163,184,0.48); }
 
     .final-center {
@@ -1295,6 +2010,49 @@
       }
     }
 
+
+    @media (max-width: 600px) {
+      .theme-carousel {
+        grid-template-columns: 36px 1fr 36px;
+        gap: 6px;
+        min-height: 145px;
+      }
+
+      .theme-stage {
+        height: 132px;
+      }
+
+      .theme-arrow {
+        width: 34px;
+        height: 56px;
+        font-size: 28px;
+      }
+
+      .theme-card {
+        width: min(260px, 90%);
+        min-height: 82px;
+        gap: 10px;
+        padding: 8px;
+      }
+
+      .theme-preview {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+      }
+
+      .theme-card.is-left {
+        transform: translateX(-34%) translateZ(-120px) rotateY(54deg) scale(0.68);
+        opacity: 0;
+      }
+
+      .theme-card.is-right {
+        transform: translateX(34%) translateZ(-120px) rotateY(-54deg) scale(0.68);
+        opacity: 0;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1319,6 +2077,7 @@
           <button class="oval-button" onclick="showLobbyPanel('multiplayerPanel')">multiplayer</button>
           <button class="oval-button" onclick="showLobbyPanel('joinPanel')">codice stanza</button>
           <button class="oval-button" onclick="showLeaderboard()">classifica</button>
+          <button class="oval-button" onclick="showLobbyPanel('themePanel')">tema</button>
         </div>
 
         <div class="home-main">
@@ -1352,6 +2111,54 @@
             <input id="roomInput" placeholder="CODICE STANZA" maxlength="6" />
             <button onclick="joinRoom()">Entra in partita</button>
             <p id="lobbyMessage"></p>
+          </div>
+
+          <div id="themePanel" class="home-panel hidden">
+            <h2>Tema grafico</h2>
+            <p>Scegli lo stile grafico del gioco usando le frecce o la rotella del mouse.</p>
+
+            <div class="theme-carousel" id="themeCarousel" onwheel="handleThemeWheel(event)">
+              <button class="theme-arrow left" onclick="previousTheme()" aria-label="Tema precedente">‹</button>
+
+              <div class="theme-stage">
+                <button id="themeClassicBtn" class="theme-card active" onclick="selectCurrentTheme()">
+                  <span class="theme-preview classic-preview"></span>
+                  <span>
+                    <strong>Classico</strong><br>
+                    <small>Tavolo verde, carte blu e dettagli dorati</small>
+                  </span>
+                </button>
+
+                <button id="themeRegaleBtn" class="theme-card" onclick="selectCurrentTheme()">
+                  <span class="theme-preview regale-preview"></span>
+                  <span>
+                    <strong>Regale</strong><br>
+                    <small>Marrone scuro, oro, rubino e lapislazzulo</small>
+                  </span>
+                </button>
+
+                <button id="themeNotturnoBtn" class="theme-card" onclick="selectCurrentTheme()">
+                  <span class="theme-preview notturno-preview"></span>
+                  <span>
+                    <strong>Notturno</strong><br>
+                    <small>Blu notte, petrolio e dettagli argento</small>
+                  </span>
+                </button>
+
+                <button id="themeAuroraBtn" class="theme-card" onclick="selectCurrentTheme()">
+                  <span class="theme-preview aurora-preview"></span>
+                  <span>
+                    <strong>Aurora</strong><br>
+                    <small>Viola profondo, turchese e oro caldo</small>
+                  </span>
+                </button>
+              </div>
+
+              <button class="theme-arrow right" onclick="nextTheme()" aria-label="Tema successivo">›</button>
+            </div>
+
+            <p id="themeMessage" class="theme-message">Tema attuale: Classico</p>
+            <p class="theme-help">Usa frecce o rotella per cambiare tema, poi clicca la scheda centrale per applicarlo.</p>
           </div>
 
           <button class="home-rules-button" onclick="toggleRules()">regolamento</button>
@@ -1518,6 +2325,111 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    const availableThemes = [
+      { id: 'classic', label: 'Classico', btnId: 'themeClassicBtn' },
+      { id: 'regale', label: 'Regale', btnId: 'themeRegaleBtn' },
+      { id: 'notturno', label: 'Notturno', btnId: 'themeNotturnoBtn' },
+      { id: 'aurora', label: 'Aurora', btnId: 'themeAuroraBtn' }
+    ];
+
+    let currentThemeIndex = Math.max(
+      0,
+      availableThemes.findIndex(t => t.id === (localStorage.getItem('le5colonne-theme') || 'classic'))
+    );
+
+    function getThemeIndex(themeName) {
+      const index = availableThemes.findIndex(t => t.id === themeName);
+      return index >= 0 ? index : 0;
+    }
+
+    function themeDistance(index, current, total) {
+      let diff = index - current;
+      if (diff > total / 2) diff -= total;
+      if (diff < -total / 2) diff += total;
+      return diff;
+    }
+
+    function renderThemeCarousel() {
+      const total = availableThemes.length;
+
+      availableThemes.forEach((theme, index) => {
+        const btn = document.getElementById(theme.btnId);
+        if (!btn) return;
+
+        const distance = themeDistance(index, currentThemeIndex, total);
+        btn.classList.remove('is-current', 'is-left', 'is-right', 'is-hidden');
+
+        if (distance === 0) btn.classList.add('is-current');
+        else if (distance === -1 || distance === -(total - 1)) btn.classList.add('is-left');
+        else if (distance === 1 || distance === total - 1) btn.classList.add('is-right');
+        else btn.classList.add('is-hidden');
+
+        btn.classList.toggle('active', theme.id === (localStorage.getItem('le5colonne-theme') || 'classic'));
+      });
+
+      const current = availableThemes[currentThemeIndex];
+      const themeMessage = document.getElementById('themeMessage');
+      if (themeMessage) {
+        const activeTheme = availableThemes[getThemeIndex(localStorage.getItem('le5colonne-theme') || 'classic')];
+        themeMessage.textContent = `Tema selezionato: ${current.label} · Tema attuale: ${activeTheme.label}`;
+      }
+    }
+
+    function applyTheme(themeName) {
+      const allowedThemes = availableThemes.map(t => t.id);
+      const theme = allowedThemes.includes(themeName) ? themeName : 'classic';
+
+      document.body.classList.remove('theme-classic', 'theme-regale', 'theme-notturno', 'theme-aurora');
+      document.body.classList.add(`theme-${theme}`);
+
+      currentThemeIndex = getThemeIndex(theme);
+      renderThemeCarousel();
+
+      const themeMessage = document.getElementById('themeMessage');
+      if (themeMessage) {
+        const label = availableThemes[currentThemeIndex].label;
+        themeMessage.textContent = `Tema attuale: ${label}`;
+      }
+    }
+
+    window.setTheme = function(themeName) {
+      const theme = themeName || availableThemes[currentThemeIndex].id;
+      localStorage.setItem('le5colonne-theme', theme);
+      applyTheme(theme);
+    };
+
+    window.nextTheme = function() {
+      currentThemeIndex = (currentThemeIndex + 1) % availableThemes.length;
+      renderThemeCarousel();
+    };
+
+    window.previousTheme = function() {
+      currentThemeIndex = (currentThemeIndex - 1 + availableThemes.length) % availableThemes.length;
+      renderThemeCarousel();
+    };
+
+    window.selectCurrentTheme = function() {
+      setTheme(availableThemes[currentThemeIndex].id);
+    };
+
+    let themeWheelLocked = false;
+    window.handleThemeWheel = function(event) {
+      event.preventDefault();
+
+      if (themeWheelLocked) return;
+      themeWheelLocked = true;
+
+      if (event.deltaY > 0 || event.deltaX > 0) nextTheme();
+      else previousTheme();
+
+      setTimeout(() => {
+        themeWheelLocked = false;
+      }, 260);
+    };
+
+    applyTheme(localStorage.getItem('le5colonne-theme') || 'classic');
+    renderThemeCarousel();
+
     window.toggleRules = function() {
       document.getElementById('rulesScreen').classList.toggle('hidden');
     };
@@ -1552,7 +2464,7 @@
     }
 
     window.showLobbyPanel = function(panelId) {
-      const panels = ['multiplayerPanel', 'joinPanel'];
+      const panels = ['multiplayerPanel', 'joinPanel', 'themePanel'];
       for (const id of panels) {
         const panel = document.getElementById(id);
         if (!panel) continue;
@@ -3050,9 +3962,13 @@
           const p1Status = r.p1Bust ? '<span class="bust">Sballato</span>' : '<span class="valid">Valido</span>';
           const p2Status = r.p2Bust ? '<span class="bust">Sballato</span>' : '<span class="valid">Valido</span>';
 
-          const cardClass = r.winner === 0 ? 'win-p1' : r.winner === 1 ? 'win-p2' : 'win-none';
-          const badgeClass = r.winner === 0 ? 'p1' : r.winner === 1 ? 'p2' : 'none';
-          const badgeText = r.winner === null || r.winner === undefined ? 'Nessun punto' : `Punto a ${winnerName}`;
+          const hasWinner = !(r.winner === null || r.winner === undefined);
+          const currentUserWonColumn = hasWinner && r.winner === myPlayer;
+          const currentUserLostColumn = hasWinner && r.winner !== myPlayer;
+
+          const cardClass = !hasWinner ? 'win-none' : currentUserWonColumn ? 'win-you' : 'win-opponent';
+          const badgeClass = !hasWinner ? 'none' : currentUserWonColumn ? 'you' : 'opponent';
+          const badgeText = !hasWinner ? 'Nessun punto' : currentUserWonColumn ? `Punto a te` : `Punto a ${winnerName}`;
 
           const p1Leader = r.winner === 0 ? 'leader' : '';
           const p2Leader = r.winner === 1 ? 'leader' : '';
