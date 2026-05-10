@@ -1249,6 +1249,31 @@
       color: #F2C14E;
     }
 
+
+    .cancel-room-btn {
+      background: rgba(255,255,255,0.88);
+      color: #1f2937;
+    }
+
+    .cancel-room-btn:hover {
+      background: white;
+    }
+
+    body.theme-regale .cancel-room-btn {
+      background: rgba(255,248,223,0.90);
+      color: #291E13;
+    }
+
+    body.theme-notturno .cancel-room-btn {
+      background: rgba(216,222,233,0.92);
+      color: #0B132B;
+    }
+
+    body.theme-aurora .cancel-room-btn {
+      background: rgba(255,247,237,0.92);
+      color: #2D1B4E;
+    }
+
     /* RULES */
     .rules-box {
       background: rgba(0,0,0,0.35);
@@ -3123,7 +3148,7 @@
             </div>
 
             <div id="authLoggedBox" class="hidden">
-              <p>Il nome account verrà usato automaticamente nelle nuove partite.</p>
+              <p>Il nome account verrà usato automaticamente nelle nuove partite e nella classifica multiplayer.</p>
               <button onclick="logoutAccount()">Esci</button>
             </div>
 
@@ -3230,7 +3255,7 @@
 
     <div id="leaderboardScreen" class="status-box hidden">
       <h2>Classifica online multiplayer</h2>
-      <p>La classifica considera solo le partite multiplayer online, non il singleplayer.</p>
+      <p>La classifica considera solo partite multiplayer online e solo giocatori che hanno effettuato il login.</p>
       <div id="leaderboardContent">Caricamento...</div>
       <button onclick="hideLeaderboard()">Torna al menu</button>
     </div>
@@ -3240,6 +3265,7 @@
       <p>Codice stanza:</p>
       <div class="room-code" id="roomCodeText"></div>
       <button onclick="copyRoomCode()">Copia codice stanza</button>
+      <button class="cancel-room-btn" onclick="cancelWaitingRoom()">Torna al menu</button>
       <p id="copyMessage"></p>
       <p>Manda questo codice al tuo amico e aspetta che entri.</p>
       <p><small>La stanza resta valida per circa 24 ore.</small></p>
@@ -3545,6 +3571,10 @@
       return email.split('@')[0].slice(0, 18);
     }
 
+    function getAuthUid() {
+      return authUser && authUser.uid ? authUser.uid : '';
+    }
+
     function setAuthMessage(message) {
       const el = document.getElementById('authMessage');
       if (el) el.textContent = message || '';
@@ -3741,14 +3771,16 @@
     function createRestartGameFromCurrent() {
       const player1Name = game.players[0].name || 'Giocatore 1';
       const player2Name = game.players[1].name || 'Giocatore 2';
+      const player1Uid = game.players[0].uid || '';
+      const player2Uid = game.players[1].uid || '';
       const deck = makeDeck();
 
       const newGame = {
         deck,
         discard: [],
         players: [
-          { joined: true, name: player1Name, hand: [], columns: [[], [], [], [], []], score: 0 },
-          { joined: true, name: player2Name, hand: [], columns: [[], [], [], [], []], score: 0 }
+          { joined: true, name: player1Name, uid: player1Uid, hand: [], columns: [[], [], [], [], []], score: 0 },
+          { joined: true, name: player2Name, uid: player2Uid, hand: [], columns: [[], [], [], [], []], score: 0 }
         ],
         centerCards: [],
         currentPlayer: 0,
@@ -3807,6 +3839,7 @@
 
       const initial = createInitialGame();
       initial.players[0].name = getPlayerName('Giocatore 1');
+      initial.players[0].uid = getAuthUid();
       await set(ref(db, `rooms/${roomId}`), initial);
       saveCurrentSession();
       listenRoom();
@@ -3829,6 +3862,7 @@
 
       const initial = createInitialGame();
       initial.players[0].name = getPlayerName('Giocatore');
+      initial.players[0].uid = getAuthUid();
       initial.players[1].joined = true;
       initial.players[1].name = 'PC';
       initial.status = 'playing';
@@ -3883,9 +3917,30 @@
       const normalized = normalizeGameState(state);
       normalized.players[1].joined = true;
       normalized.players[1].name = getPlayerName('Giocatore 2');
+      normalized.players[1].uid = getAuthUid();
       normalized.status = 'playing';
       await saveGame(normalized);
       listenRoom();
+    };
+
+    window.cancelWaitingRoom = async function() {
+      if (!roomId || gameMode !== 'multiplayer' || myPlayer !== 0) {
+        clearCurrentSession();
+        location.reload();
+        return;
+      }
+
+      const confirmCancel = confirm('Vuoi tornare al menu? La stanza appena creata verrà eliminata.');
+      if (!confirmCancel) return;
+
+      try {
+        await remove(ref(db, `rooms/${roomId}`));
+      } catch (error) {
+        console.warn('Non riesco a eliminare la stanza:', error);
+      }
+
+      clearCurrentSession();
+      location.reload();
     };
 
     window.copyRoomCode = async function() {
@@ -3930,10 +3985,11 @@
         .slice(0, 32);
     }
 
-    async function updateLeaderboardForPlayer(name, result, columnsWon) {
-      const cleanName = cleanLeaderboardName(name);
-      const key = leaderboardKeyFromName(cleanName);
-      const playerRef = ref(db, `leaderboard/${key}`);
+    async function updateLeaderboardForPlayer(player, result, columnsWon) {
+      if (!player || !player.uid) return;
+
+      const cleanName = cleanLeaderboardName(player.name);
+      const playerRef = ref(db, `leaderboard/${player.uid}`);
       const snapshot = await get(playerRef);
       const old = snapshot.exists() ? snapshot.val() : {};
 
@@ -3965,8 +4021,8 @@
         const p1Result = p1Score > p2Score ? 'win' : p1Score < p2Score ? 'loss' : 'draw';
         const p2Result = p2Score > p1Score ? 'win' : p2Score < p1Score ? 'loss' : 'draw';
 
-        await updateLeaderboardForPlayer(game.players[0].name, p1Result, p1Score);
-        await updateLeaderboardForPlayer(game.players[1].name, p2Result, p2Score);
+        await updateLeaderboardForPlayer(game.players[0], p1Result, p1Score);
+        await updateLeaderboardForPlayer(game.players[1], p2Result, p2Score);
         await update(ref(db, `rooms/${roomId}`), { leaderboardUpdated: true });
       } catch (error) {
         console.warn('Classifica non aggiornata:', error);
@@ -3984,6 +4040,12 @@
       document.getElementById('leaderboardScreen').classList.remove('hidden');
 
       const content = document.getElementById('leaderboardContent');
+
+      if (!authUser) {
+        content.innerHTML = '<p>La classifica multiplayer è disponibile solo dopo aver effettuato il login.</p><button onclick="hideLeaderboard(); showLobbyPanel(\'accountPanel\')">Accedi / Registrati</button>';
+        return;
+      }
+
       content.textContent = 'Caricamento...';
 
       function winRate(player) {
@@ -4027,7 +4089,7 @@
           .slice(0, 20);
 
         if (players.length === 0) {
-          content.innerHTML = '<p>Nessuna partita multiplayer registrata.</p>';
+          content.innerHTML = '<p>Nessuna partita multiplayer registrata da giocatori con login.</p>';
           return;
         }
 
@@ -4248,12 +4310,14 @@
           state.players[p] = {
             joined: false,
             name: `Giocatore ${p + 1}`,
+            uid: '',
             hand: [],
             columns: [[], [], [], [], []],
             score: 0
           };
         }
 
+        state.players[p].uid = state.players[p].uid || '';
         state.players[p].hand = toArray(state.players[p].hand);
         state.players[p].columns = toFixedArray(state.players[p].columns, 5, () => []);
 
