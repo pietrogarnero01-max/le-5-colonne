@@ -1207,6 +1207,48 @@
       box-shadow: 0 0 0 2px rgba(20,184,166,0.22), 0 12px 22px rgba(0,0,0,0.18);
     }
 
+
+    .auth-message {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #fde68a;
+      min-height: 20px;
+    }
+
+    .auth-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      margin-top: 8px;
+    }
+
+    #authStatusText {
+      font-weight: bold;
+      color: #fde68a;
+    }
+
+    #authLoggedBox {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    body.theme-regale #authStatusText,
+    body.theme-regale .auth-message {
+      color: #E4C45E;
+    }
+
+    body.theme-notturno #authStatusText,
+    body.theme-notturno .auth-message {
+      color: #D8DEE9;
+    }
+
+    body.theme-aurora #authStatusText,
+    body.theme-aurora .auth-message {
+      color: #F2C14E;
+    }
+
     /* RULES */
     .rules-box {
       background: rgba(0,0,0,0.35);
@@ -2980,6 +3022,7 @@
           <button class="oval-button" onclick="showLobbyPanel('joinPanel')">codice stanza</button>
           <button class="oval-button" onclick="showLeaderboard()">classifica</button>
           <button class="oval-button" onclick="showLobbyPanel('themePanel')">tema</button>
+          <button class="oval-button" onclick="showLobbyPanel('accountPanel')">account</button>
         </div>
 
         <div class="home-main">
@@ -2999,7 +3042,7 @@
 
           <div id="multiplayerPanel" class="home-panel hidden">
             <h2>Multiplayer online</h2>
-            <p>Scrivi il tuo nome, crea una stanza e manda il codice al tuo amico.</p>
+            <p>Se hai effettuato l’accesso, il nome account verrà usato automaticamente. Crea una stanza e manda il codice al tuo amico.</p>
             <input id="playerNameInput" placeholder="IL TUO NOME" maxlength="18" />
             <br>
             <button onclick="createRoom()">Crea partita</button>
@@ -3007,7 +3050,7 @@
 
           <div id="joinPanel" class="home-panel hidden">
             <h2>Entra in una stanza</h2>
-            <p>Scrivi il tuo nome e inserisci il codice stanza ricevuto.</p>
+            <p>Se hai effettuato l’accesso, il nome account verrà usato automaticamente. Inserisci il codice stanza ricevuto.</p>
             <input id="playerNameInputJoin" placeholder="IL TUO NOME" maxlength="18" />
             <br>
             <input id="roomInput" placeholder="CODICE STANZA" maxlength="6" />
@@ -3062,6 +3105,31 @@
             <p id="themeMessage" class="theme-message">Tema attuale: Classico</p>
             <p class="theme-help">Usa frecce o rotella per cambiare tema, poi clicca la scheda centrale per applicarlo.</p>
           </div>
+
+          <div id="accountPanel" class="home-panel hidden">
+            <h2>Account giocatore</h2>
+            <p id="authStatusText">Non sei connesso.</p>
+
+            <div id="authForms">
+              <input id="authNameInput" placeholder="NOME GIOCATORE" maxlength="18" />
+              <br>
+              <input id="authEmailInput" type="email" placeholder="EMAIL" />
+              <br>
+              <input id="authPasswordInput" type="password" placeholder="PASSWORD" />
+              <br>
+              <button onclick="registerAccount()">Registrati</button>
+              <button onclick="loginAccount()">Accedi</button>
+              <p class="auth-hint">La password deve avere almeno 6 caratteri.</p>
+            </div>
+
+            <div id="authLoggedBox" class="hidden">
+              <p>Il nome account verrà usato automaticamente nelle nuove partite.</p>
+              <button onclick="logoutAccount()">Esci</button>
+            </div>
+
+            <p id="authMessage" class="auth-message"></p>
+          </div>
+
 
           <details class="home-rules-dropdown">
             <summary>regolamento</summary>
@@ -3255,6 +3323,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
     import { getDatabase, ref, set, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCPKQhCowtteTs7Lu7bpgyD0ihKk3GcPT8",
@@ -3269,6 +3338,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const auth = getAuth(app);
 
     const availableThemes = [
       { id: 'classic', label: 'Classico', btnId: 'themeClassicBtn' },
@@ -3399,6 +3469,7 @@
     let pcThinking = false;
     let pcDifficulty = 'medium';
     let leaderboardUpdateInProgress = false;
+    let authUser = null;
 
     const sessionStorageKey = 'le5colonne-current-session';
     const singleplayerStorageKey = 'le5colonne-singleplayer-state';
@@ -3464,7 +3535,123 @@
     }
 
 
+    function getAuthPlayerName() {
+      if (!authUser) return '';
+      const displayName = (authUser.displayName || '').trim();
+      if (displayName) return displayName.slice(0, 18);
+
+      const email = (authUser.email || '').trim();
+      if (!email) return '';
+      return email.split('@')[0].slice(0, 18);
+    }
+
+    function setAuthMessage(message) {
+      const el = document.getElementById('authMessage');
+      if (el) el.textContent = message || '';
+    }
+
+    function friendlyAuthError(error) {
+      const code = error && error.code ? error.code : '';
+
+      if (code.includes('email-already-in-use')) return 'Questa email è già registrata.';
+      if (code.includes('invalid-email')) return 'Email non valida.';
+      if (code.includes('weak-password')) return 'Password troppo debole: usa almeno 6 caratteri.';
+      if (code.includes('user-not-found') || code.includes('wrong-password') || code.includes('invalid-credential')) return 'Email o password non corretti.';
+      if (code.includes('network-request-failed')) return 'Problema di connessione. Riprova.';
+      if (code.includes('operation-not-allowed')) return 'Email/Password non è abilitato su Firebase Authentication.';
+
+      return 'Errore account. Controlla i dati e riprova.';
+    }
+
+    function updateAuthUi() {
+      const status = document.getElementById('authStatusText');
+      const forms = document.getElementById('authForms');
+      const loggedBox = document.getElementById('authLoggedBox');
+
+      if (!status || !forms || !loggedBox) return;
+
+      if (authUser) {
+        status.textContent = `Connesso come: ${getAuthPlayerName()}`;
+        forms.classList.add('hidden');
+        loggedBox.classList.remove('hidden');
+      } else {
+        status.textContent = 'Non sei connesso.';
+        forms.classList.remove('hidden');
+        loggedBox.classList.add('hidden');
+      }
+    }
+
+    window.registerAccount = async function() {
+      const nameInput = document.getElementById('authNameInput');
+      const emailInput = document.getElementById('authEmailInput');
+      const passwordInput = document.getElementById('authPasswordInput');
+
+      const name = nameInput ? nameInput.value.trim().slice(0, 18) : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      if (!name) {
+        setAuthMessage('Inserisci un nome giocatore.');
+        return;
+      }
+
+      if (!email || !password) {
+        setAuthMessage('Inserisci email e password.');
+        return;
+      }
+
+      try {
+        setAuthMessage('Registrazione in corso...');
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(credential.user, { displayName: name });
+        authUser = credential.user;
+        updateAuthUi();
+        setAuthMessage('Account creato correttamente.');
+      } catch (error) {
+        setAuthMessage(friendlyAuthError(error));
+      }
+    };
+
+    window.loginAccount = async function() {
+      const emailInput = document.getElementById('authEmailInput');
+      const passwordInput = document.getElementById('authPasswordInput');
+
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      if (!email || !password) {
+        setAuthMessage('Inserisci email e password.');
+        return;
+      }
+
+      try {
+        setAuthMessage('Accesso in corso...');
+        await signInWithEmailAndPassword(auth, email, password);
+        updateAuthUi();
+        setAuthMessage('Accesso eseguito.');
+      } catch (error) {
+        setAuthMessage(friendlyAuthError(error));
+      }
+    };
+
+    window.logoutAccount = async function() {
+      try {
+        await signOut(auth);
+        setAuthMessage('Sei uscito dall’account.');
+      } catch (error) {
+        setAuthMessage('Non riesco a uscire dall’account. Riprova.');
+      }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      authUser = user || null;
+      updateAuthUi();
+    });
+
     function getPlayerName(fallback) {
+      const authName = getAuthPlayerName();
+      if (authName) return authName;
+
       const mainInput = document.getElementById('playerNameInput');
       const joinInput = document.getElementById('playerNameInputJoin');
       const mainName = mainInput ? mainInput.value.trim() : '';
@@ -3473,7 +3660,7 @@
     }
 
     window.showLobbyPanel = function(panelId) {
-      const panels = ['multiplayerPanel', 'joinPanel', 'themePanel'];
+      const panels = ['multiplayerPanel', 'joinPanel', 'themePanel', 'accountPanel'];
       for (const id of panels) {
         const panel = document.getElementById(id);
         if (!panel) continue;
