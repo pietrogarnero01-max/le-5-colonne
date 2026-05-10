@@ -2647,6 +2647,105 @@
       }
     }
 
+
+    /* FIX MOBILE: carte posizionate leggibili e colonne uniformi */
+    .columns {
+      align-items: stretch;
+    }
+
+    .column {
+      height: 100%;
+      align-self: stretch;
+    }
+
+    @media (max-width: 600px) {
+      .columns {
+        align-items: stretch !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .column {
+        height: 100% !important;
+        align-self: stretch !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .players-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        align-items: stretch !important;
+        flex: 1;
+      }
+
+      .player-zone {
+        min-height: 62px !important;
+        height: auto !important;
+        padding: 4px 2px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .player-zone:has(.cards-grid .card) {
+        min-height: 76px !important;
+      }
+
+      .player-zone-title {
+        font-size: 8px;
+        line-height: 1;
+        margin-bottom: 3px;
+      }
+
+      .cards-grid {
+        gap: 2px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .card.small {
+        width: 28px !important;
+        height: 40px !important;
+        margin: 1px;
+        border-radius: 5px;
+        border-width: 1px;
+        font-size: 10px;
+      }
+
+      .card.small .card-rank-center {
+        font-size: 11px !important;
+        letter-spacing: -0.5px;
+      }
+
+      .card.small .card-corner {
+        display: flex !important;
+        font-size: 5px !important;
+        line-height: 5px !important;
+        left: 2px !important;
+        top: 2px !important;
+      }
+
+      .card.small .card-corner.bottom {
+        right: 2px !important;
+        bottom: 2px !important;
+        left: auto !important;
+        top: auto !important;
+      }
+
+      .card-status {
+        width: 9px !important;
+        height: 9px !important;
+        font-size: 6px !important;
+        right: 1px !important;
+        bottom: 1px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
