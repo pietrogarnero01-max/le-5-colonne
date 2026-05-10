@@ -3151,6 +3151,34 @@
     let pcDifficulty = 'medium';
     let leaderboardUpdateInProgress = false;
 
+    const sessionStorageKey = 'le5colonne-current-session';
+    const singleplayerStorageKey = 'le5colonne-singleplayer-state';
+
+    function saveCurrentSession() {
+      if (!roomId || myPlayer === null || myPlayer === undefined) return;
+
+      const session = {
+        roomId,
+        myPlayer,
+        gameMode,
+        pcDifficulty,
+        savedAt: Date.now()
+      };
+
+      localStorage.setItem(sessionStorageKey, JSON.stringify(session));
+
+      if (gameMode === 'singleplayer' && game) {
+        localStorage.setItem(singleplayerStorageKey, JSON.stringify(game));
+      }
+    }
+
+    function clearCurrentSession() {
+      localStorage.removeItem(sessionStorageKey);
+      localStorage.removeItem(singleplayerStorageKey);
+    }
+
+    window.clearCurrentSession = clearCurrentSession;
+
     function getPlayerName(fallback) {
       const mainInput = document.getElementById('playerNameInput');
       const joinInput = document.getElementById('playerNameInputJoin');
@@ -3278,6 +3306,7 @@
     async function saveGame(newGame) {
       if (gameMode === 'singleplayer') {
         game = normalizeGameState(structuredClone(newGame));
+        saveCurrentSession();
 
         if (game.status === 'finished') showResults();
         else showGame();
@@ -3286,6 +3315,7 @@
       }
 
       await set(ref(db, `rooms/${roomId}`), newGame);
+      saveCurrentSession();
     }
 
     window.createRoom = async function() {
@@ -3300,6 +3330,7 @@
       const initial = createInitialGame();
       initial.players[0].name = getPlayerName('Giocatore 1');
       await set(ref(db, `rooms/${roomId}`), initial);
+      saveCurrentSession();
       listenRoom();
 
       document.getElementById('lobbyScreen').classList.add('hidden');
@@ -3327,6 +3358,7 @@
       addLogToState(initial, `Partita singleplayer iniziata contro il PC. Difficoltà: ${getDifficultyName(pcDifficulty)}.`);
 
       game = normalizeGameState(initial);
+      saveCurrentSession();
 
       document.getElementById('lobbyScreen').classList.add('hidden');
       document.getElementById('waitingScreen').classList.add('hidden');
@@ -3361,6 +3393,7 @@
       selectedColumnIndex = null;
       queenBoardSelection = null;
       localLog = [];
+      saveCurrentSession();
 
       const normalized = normalizeGameState(state);
       normalized.players[1].joined = true;
@@ -3384,6 +3417,7 @@
     window.leaveRoom = function() {
       const confirmLeave = confirm('Vuoi davvero abbandonare la stanza?');
       if (!confirmLeave) return;
+      clearCurrentSession();
       location.reload();
     };
 
@@ -3394,6 +3428,7 @@
       if (!confirmDelete) return;
 
       await remove(ref(db, `rooms/${roomId}`));
+      clearCurrentSession();
       alert('Stanza eliminata.');
       location.reload();
     };
@@ -3588,11 +3623,80 @@
       document.getElementById('lobbyScreen').classList.remove('hidden');
     };
 
+    async function restorePreviousSession() {
+      const saved = localStorage.getItem(sessionStorageKey);
+      if (!saved) return false;
+
+      let session;
+      try {
+        session = JSON.parse(saved);
+      } catch (error) {
+        clearCurrentSession();
+        return false;
+      }
+
+      if (!session || !session.roomId || session.myPlayer === null || session.myPlayer === undefined || !session.gameMode) {
+        clearCurrentSession();
+        return false;
+      }
+
+      // Se la sessione è vecchissima, non la recupero automaticamente.
+      const maxAgeMs = 1000 * 60 * 60 * 12;
+      if (session.savedAt && Date.now() - session.savedAt > maxAgeMs) {
+        clearCurrentSession();
+        return false;
+      }
+
+      roomId = session.roomId;
+      myPlayer = session.myPlayer;
+      gameMode = session.gameMode;
+      pcDifficulty = session.pcDifficulty || 'medium';
+      selectedHandIndex = null;
+      selectedColumnIndex = null;
+      queenBoardSelection = null;
+      localLog = [];
+
+      if (gameMode === 'singleplayer') {
+        const savedGame = localStorage.getItem(singleplayerStorageKey);
+        if (!savedGame) {
+          clearCurrentSession();
+          return false;
+        }
+
+        try {
+          game = normalizeGameState(JSON.parse(savedGame));
+        } catch (error) {
+          clearCurrentSession();
+          return false;
+        }
+
+        if (game.status === 'finished') showResults();
+        else showGame();
+
+        return true;
+      }
+
+      try {
+        const snapshot = await get(ref(db, `rooms/${roomId}`));
+        if (!snapshot.exists()) {
+          clearCurrentSession();
+          return false;
+        }
+
+        listenRoom();
+        return true;
+      } catch (error) {
+        console.warn('Non riesco a recuperare la sessione precedente:', error);
+        return false;
+      }
+    }
+
     function listenRoom() {
       if (unsubscribeRoom) unsubscribeRoom();
       const roomRef = ref(db, `rooms/${roomId}`);
       unsubscribeRoom = onValue(roomRef, (snapshot) => {
         if (!snapshot.exists()) {
+          clearCurrentSession();
           alert('La stanza è stata eliminata o non esiste più. Tornerai alla lobby.');
           location.reload();
           return;
@@ -4718,9 +4822,13 @@
         html += `<p>Aspetta che ${p1.name} avvii una nuova partita.</p>`;
       }
 
-      html += `<button onclick="location.reload()">Torna alla lobby</button>`;
+      html += `<button onclick="clearCurrentSession(); location.reload()">Torna alla lobby</button>`;
       resultScreen.innerHTML = html;
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      restorePreviousSession();
+    });
   </script>
 </body>
 </html>
