@@ -3613,7 +3613,7 @@
     let audioVolume = Number(localStorage.getItem('le5colonne-volume') || 55) / 100;
     let animationsEnabled = localStorage.getItem('le5colonne-animations') !== 'off';
     let loungeTimer = null;
-    let lastBellTurnKey = '';
+    let lastBellPlayerKey = '';
 
     const loungeChords = [
       [261.63, 329.63, 392.00, 493.88],
@@ -3870,11 +3870,21 @@
       if (!game || game.status !== 'playing') return;
       if (!isMyTurn()) return;
 
-      const key = `${roomId || 'single'}-${game.currentPlayer}-${game.phase}-${game.updatedAt || ''}`;
-      if (key === lastBellTurnKey) return;
+      // La campanellina deve suonare solo quando il turno passa davvero a te.
+      // Non deve suonare quando clicchi una carta, selezioni una carta o la schermata fa render().
+      const key = `${roomId || 'single'}-${game.currentPlayer}`;
 
-      lastBellTurnKey = key;
+      if (key === lastBellPlayerKey) return;
+
+      lastBellPlayerKey = key;
       playTurnBell();
+    }
+
+    function resetTurnBellIfNotMyTurn() {
+      if (!game || game.status !== 'playing') return;
+      if (!isMyTurn()) {
+        lastBellPlayerKey = '';
+      }
     }
 
     updateSettingsUi();
@@ -4159,6 +4169,7 @@
       selectedColumnIndex = null;
       queenBoardSelection = null;
       localLog = [];
+      lastBellPlayerKey = '';
 
       const initial = createInitialGame();
       initial.players[0].name = getPlayerName('Giocatore 1');
@@ -4182,6 +4193,7 @@
       queenBoardSelection = null;
       localLog = [];
       pcThinking = false;
+      lastBellPlayerKey = '';
 
       const initial = createInitialGame();
       initial.players[0].name = getPlayerName('Giocatore');
@@ -4741,6 +4753,7 @@
       renderHand();
       updateButtons();
       renderLog();
+      resetTurnBellIfNotMyTurn();
       maybePlayTurnBell();
     }
 
