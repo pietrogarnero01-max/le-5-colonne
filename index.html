@@ -4,6 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le 5 Colonne</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="%230f3f24"/>
+  <rect x="12" y="10" width="40" height="44" rx="6" fill="%2314532d" stroke="%23facc15" stroke-width="3"/>
+  <rect x="18" y="34" width="4" height="12" rx="2" fill="%23facc15"/>
+  <rect x="25" y="26" width="4" height="20" rx="2" fill="%23facc15"/>
+  <rect x="32" y="18" width="4" height="28" rx="2" fill="%23facc15"/>
+  <rect x="39" y="26" width="4" height="20" rx="2" fill="%23facc15"/>
+  <rect x="46" y="34" width="4" height="12" rx="2" fill="%23facc15"/>
+</svg>'>
+
 
   <style>
     * { box-sizing: border-box; font-family: Arial, sans-serif; }
@@ -896,29 +907,131 @@
     .valid { color: #86efac; font-weight: bold; }
 
     /* LEADERBOARD */
-    .leaderboard-list { max-width: 900px; margin: 14px auto; display: grid; gap: 10px; }
+    .leaderboard-list {
+      max-width: 980px;
+      margin: 18px auto;
+      display: grid;
+      gap: 10px;
+    }
+
+    .leaderboard-podium {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 900px;
+      margin: 18px auto 16px;
+      align-items: end;
+    }
+
+    .podium-card {
+      background: linear-gradient(180deg, rgba(0,0,0,0.34), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 18px;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .podium-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.14;
+      pointer-events: none;
+      background: radial-gradient(circle at top, rgba(250,204,21,0.65), transparent 45%);
+    }
+
+    .podium-card.first {
+      transform: translateY(-10px);
+      border-color: rgba(250,204,21,0.65);
+    }
+
+    .podium-card.second {
+      border-color: rgba(226,232,240,0.55);
+    }
+
+    .podium-card.third {
+      border-color: rgba(251,146,60,0.58);
+    }
+
+    .podium-medal {
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .podium-name {
+      color: #fde68a;
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .podium-stats {
+      font-size: 13px;
+      color: rgba(255,255,255,0.88);
+      position: relative;
+      z-index: 1;
+      line-height: 1.35;
+    }
 
     .leaderboard-row {
       display: grid;
-      grid-template-columns: 60px 1fr repeat(5, 90px);
+      grid-template-columns: 55px 1.4fr repeat(6, minmax(70px, 1fr));
       gap: 8px;
       align-items: center;
-      background: rgba(0,0,0,0.28);
+      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(255,255,255,0.05));
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 14px;
       padding: 12px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.14);
     }
 
-    .leaderboard-row.header { background: rgba(250,204,21,0.16); color: #fde047; font-weight: bold; }
-    .leaderboard-name { font-weight: bold; color: #facc15; }
+    .leaderboard-row.header {
+      background: rgba(250,204,21,0.16);
+      color: #fde047;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
 
-    @media (max-width: 900px) {
-      .columns { grid-template-columns: 1fr; }
-      .column { min-height: auto; }
-      .hand-row { grid-template-columns: 1fr; }
-      .hand-spacer { display: none; }
-      .turn-button-box { min-width: 0; }
-      .leaderboard-row { grid-template-columns: 45px 1fr; }
+    .leaderboard-rank {
+      font-size: 18px;
+      font-weight: 900;
+      color: #facc15;
+      text-align: center;
+    }
+
+    .leaderboard-name {
+      font-weight: 900;
+      color: #facc15;
+      overflow-wrap: anywhere;
+    }
+
+    .leaderboard-stat {
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .winrate-good { color: #86efac; font-weight: 900; }
+    .winrate-mid { color: #fde68a; font-weight: 900; }
+    .winrate-low { color: #fca5a5; font-weight: 900; }
+
+    .leaderboard-note {
+      max-width: 800px;
+      margin: 8px auto 0;
+      color: rgba(255,255,255,0.78);
+      font-size: 13px;
+    }
+
       .leaderboard-row span:not(:first-child):not(:nth-child(2)) { font-size: 13px; }
       .card.center-card {
         width: 96px;
@@ -1143,6 +1256,42 @@
 
       .log {
         display: none;
+      }
+    }
+
+
+    @media (max-width: 700px) {
+      .leaderboard-podium {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .podium-card.first {
+        transform: none;
+        order: -1;
+      }
+
+      .leaderboard-row {
+        grid-template-columns: 42px 1fr 70px;
+        gap: 6px;
+        padding: 9px;
+      }
+
+      .leaderboard-row.header {
+        display: none;
+      }
+
+      .leaderboard-row span:nth-child(3)::before { content: 'Partite: '; opacity: 0.75; }
+      .leaderboard-row span:nth-child(4)::before { content: 'Vittorie: '; opacity: 0.75; }
+      .leaderboard-row span:nth-child(5)::before { content: 'Sconfitte: '; opacity: 0.75; }
+      .leaderboard-row span:nth-child(6)::before { content: 'Pareggi: '; opacity: 0.75; }
+      .leaderboard-row span:nth-child(7)::before { content: 'Win rate: '; opacity: 0.75; }
+      .leaderboard-row span:nth-child(8)::before { content: 'Colonne: '; opacity: 0.75; }
+
+      .leaderboard-row span:nth-child(n+3) {
+        grid-column: 2 / 4;
+        text-align: left;
+        font-size: 12px;
       }
     }
 
@@ -1709,14 +1858,43 @@
       const content = document.getElementById('leaderboardContent');
       content.textContent = 'Caricamento...';
 
+      function winRate(player) {
+        const games = player.games || 0;
+        if (games <= 0) return 0;
+        return Math.round(((player.wins || 0) / games) * 100);
+      }
+
+      function winRateClass(rate) {
+        if (rate >= 65) return 'winrate-good';
+        if (rate >= 40) return 'winrate-mid';
+        return 'winrate-low';
+      }
+
+      function medal(index) {
+        if (index === 0) return '🥇';
+        if (index === 1) return '🥈';
+        if (index === 2) return '🥉';
+        return `${index + 1}`;
+      }
+
       try {
         const snapshot = await get(ref(db, 'leaderboard'));
         const data = snapshot.exists() ? snapshot.val() : {};
         const players = Object.values(data)
+          .map(player => ({
+            ...player,
+            games: player.games || 0,
+            wins: player.wins || 0,
+            losses: player.losses || 0,
+            draws: player.draws || 0,
+            columnsWon: player.columnsWon || 0,
+            winRate: winRate(player)
+          }))
           .sort((a, b) => {
-            if ((b.wins || 0) !== (a.wins || 0)) return (b.wins || 0) - (a.wins || 0);
-            if ((b.columnsWon || 0) !== (a.columnsWon || 0)) return (b.columnsWon || 0) - (a.columnsWon || 0);
-            return (b.games || 0) - (a.games || 0);
+            if (b.wins !== a.wins) return b.wins - a.wins;
+            if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+            if (b.columnsWon !== a.columnsWon) return b.columnsWon - a.columnsWon;
+            return b.games - a.games;
           })
           .slice(0, 20);
 
@@ -1725,19 +1903,68 @@
           return;
         }
 
-        let html = '<div class="leaderboard-list">';
-        html += '<div class="leaderboard-row header"><span>#</span><span>Giocatore</span><span>Partite</span><span>Vittorie</span><span>Sconfitte</span><span>Pareggi</span><span>Colonne</span></div>';
+        const podiumPlayers = players.slice(0, 3);
+        let html = '';
+
+        html += '<div class="leaderboard-podium">';
+        const podiumOrder = [
+          { player: podiumPlayers[1], index: 1, cls: 'second' },
+          { player: podiumPlayers[0], index: 0, cls: 'first' },
+          { player: podiumPlayers[2], index: 2, cls: 'third' }
+        ];
+
+        for (const item of podiumOrder) {
+          if (!item.player) {
+            html += '<div></div>';
+            continue;
+          }
+
+          const rate = item.player.winRate;
+          html += `
+            <div class="podium-card ${item.cls}">
+              <div class="podium-medal">${medal(item.index)}</div>
+              <div class="podium-name">${item.player.name}</div>
+              <div class="podium-stats">
+                ${item.player.wins} vittorie · ${item.player.games} partite<br>
+                Win rate: <span class="${winRateClass(rate)}">${rate}%</span><br>
+                Colonne vinte: ${item.player.columnsWon}
+              </div>
+            </div>
+          `;
+        }
+
+        html += '</div>';
+
+        html += '<p class="leaderboard-note">Ordinamento: vittorie totali → percentuale vittorie → colonne vinte.</p>';
+
+        html += '<div class="leaderboard-list">';
+        html += `
+          <div class="leaderboard-row header">
+            <span>#</span>
+            <span>Giocatore</span>
+            <span>Partite</span>
+            <span>Vittorie</span>
+            <span>Sconfitte</span>
+            <span>Pareggi</span>
+            <span>Win rate</span>
+            <span>Colonne</span>
+          </div>
+        `;
 
         players.forEach((player, index) => {
-          html += `<div class="leaderboard-row">
-            <span>${index + 1}</span>
-            <span class="leaderboard-name">${player.name}</span>
-            <span>Partite: ${player.games || 0}</span>
-            <span>Vittorie: ${player.wins || 0}</span>
-            <span>Sconfitte: ${player.losses || 0}</span>
-            <span>Pareggi: ${player.draws || 0}</span>
-            <span>Colonne: ${player.columnsWon || 0}</span>
-          </div>`;
+          const rate = player.winRate;
+          html += `
+            <div class="leaderboard-row">
+              <span class="leaderboard-rank">${medal(index)}</span>
+              <span class="leaderboard-name">${player.name}</span>
+              <span class="leaderboard-stat">${player.games}</span>
+              <span class="leaderboard-stat">${player.wins}</span>
+              <span class="leaderboard-stat">${player.losses}</span>
+              <span class="leaderboard-stat">${player.draws}</span>
+              <span class="leaderboard-stat ${winRateClass(rate)}">${rate}%</span>
+              <span class="leaderboard-stat">${player.columnsWon}</span>
+            </div>
+          `;
         });
 
         html += '</div>';
