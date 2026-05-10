@@ -2582,6 +2582,71 @@
       }
     }
 
+
+    /* FIX ALTEZZA DINAMICA COLONNE */
+    .column {
+      min-height: auto;
+      height: auto;
+      align-self: start;
+    }
+
+    .players-row {
+      align-items: start;
+    }
+
+    .player-zone {
+      min-height: 86px;
+      height: auto;
+    }
+
+    .player-zone:has(.cards-grid .card) {
+      min-height: 112px;
+    }
+
+    @media (min-width: 901px) {
+      .column {
+        min-height: 0;
+      }
+
+      .player-zone {
+        min-height: 105px;
+      }
+
+      .player-zone:has(.cards-grid .card) {
+        min-height: 138px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .columns {
+        align-items: start;
+      }
+
+      .column {
+        min-height: 0 !important;
+        height: auto !important;
+        align-self: start;
+      }
+
+      .players-row {
+        align-items: start;
+      }
+
+      .player-zone {
+        min-height: 38px !important;
+        height: auto !important;
+        padding: 4px 2px;
+      }
+
+      .player-zone:has(.cards-grid .card) {
+        min-height: 48px !important;
+      }
+
+      .cards-grid {
+        min-height: 0;
+      }
+    }
+
   </style>
 </head>
 <body>
