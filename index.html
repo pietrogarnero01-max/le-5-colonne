@@ -334,6 +334,84 @@
 
     .home-rules-button:hover { background: rgba(255,255,255,0.12); }
 
+    .home-rules-dropdown {
+      position: absolute !important;
+      right: 28px;
+      bottom: 28px;
+      top: auto !important;
+      left: auto !important;
+      z-index: 8 !important;
+      width: 145px;
+      color: white;
+    }
+
+    .home-rules-dropdown summary {
+      min-height: 46px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.16);
+      color: white;
+      border: 3px solid rgba(255,255,255,0.95);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      cursor: pointer;
+      list-style: none;
+      text-transform: lowercase;
+      padding: 8px;
+    }
+
+    .home-rules-dropdown summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .home-rules-dropdown summary::after {
+      content: '▾';
+      margin-left: 7px;
+      font-size: 12px;
+    }
+
+    .home-rules-dropdown[open] summary::after {
+      content: '▴';
+    }
+
+    .home-rules-dropdown summary:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .home-rules-dropdown-content {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 10px);
+      width: min(420px, 88vw);
+      max-height: 520px;
+      overflow-y: auto;
+      background: rgba(5,46,22,0.96);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: left;
+      box-shadow: 0 18px 34px rgba(0,0,0,0.36);
+      backdrop-filter: blur(4px);
+    }
+
+    .home-rules-dropdown-content h4 {
+      color: #fde047;
+      margin: 12px 0 5px;
+    }
+
+    .home-rules-dropdown-content ul {
+      margin: 4px 0 8px;
+      padding-left: 20px;
+    }
+
+    .home-rules-dropdown-content li {
+      margin: 4px 0;
+      line-height: 1.3;
+      font-size: 14px;
+    }
+
     @media (max-width: 800px) {
       .home-layout { grid-template-columns: 1fr; }
       .home-sidebar {
@@ -346,10 +424,19 @@
         padding: 18px;
       }
       .home-title-box { font-size: 26px; }
-      .home-rules-button {
+      .home-rules-button,
+      .home-rules-dropdown {
         position: static !important;
         margin: 24px auto 0;
         display: block;
+      }
+
+      .home-rules-dropdown-content {
+        right: 50%;
+        transform: translateX(50%);
+        bottom: calc(100% + 10px);
+        width: min(360px, 92vw);
+        max-height: 420px;
       }
       .bg-chip { opacity: 0.14; transform: scale(0.85); }
       .chip-1 { left: 22px; bottom: 95px; top: auto; right: auto; }
@@ -792,6 +879,40 @@
     }
 
     body.theme-aurora .side-rules-dropdown .rules-dropdown-content {
+      background: rgba(45,27,78,0.97);
+      border-color: rgba(242,193,78,0.24);
+    }
+
+
+    body.theme-regale .home-rules-dropdown summary {
+      border-color: #E4C45E;
+      color: #fff8df;
+      background: rgba(0,0,0,0.18);
+    }
+
+    body.theme-regale .home-rules-dropdown-content {
+      background: rgba(41,30,19,0.97);
+      border-color: rgba(228,196,94,0.28);
+    }
+
+    body.theme-notturno .home-rules-dropdown summary {
+      border-color: #D8DEE9;
+      color: #E5E7EB;
+      background: rgba(0,0,0,0.20);
+    }
+
+    body.theme-notturno .home-rules-dropdown-content {
+      background: rgba(11,19,43,0.97);
+      border-color: rgba(216,222,233,0.22);
+    }
+
+    body.theme-aurora .home-rules-dropdown summary {
+      border-color: #F2C14E;
+      color: #FFF7ED;
+      background: rgba(0,0,0,0.18);
+    }
+
+    body.theme-aurora .home-rules-dropdown-content {
       background: rgba(45,27,78,0.97);
       border-color: rgba(242,193,78,0.24);
     }
@@ -2854,7 +2975,46 @@
             <p class="theme-help">Usa frecce o rotella per cambiare tema, poi clicca la scheda centrale per applicarlo.</p>
           </div>
 
-          <button class="home-rules-button" onclick="toggleRules()">regolamento</button>
+          <details class="home-rules-dropdown">
+            <summary>regolamento</summary>
+            <div class="home-rules-dropdown-content">
+              <h4>Preparazione</h4>
+              <ul>
+                <li>Si gioca in 2 con un mazzo francese da 52 carte, senza jolly.</li>
+                <li>Ogni giocatore riceve 6 carte.</li>
+                <li>Al centro ci sono 5 carte coperte, una per ogni colonna.</li>
+              </ul>
+
+              <h4>Turno</h4>
+              <ul>
+                <li>Nel tuo turno scegli: posizioni una carta oppure usi una carta abilità.</li>
+                <li>Le carte posizionate vengono messe coperte.</li>
+                <li>Dopo aver posizionato una carta puoi scoprire solo la centrale della stessa colonna.</li>
+              </ul>
+
+              <h4>Valori</h4>
+              <ul>
+                <li>2-10 valgono il loro numero.</li>
+                <li>Jack, Donna e Re valgono 10.</li>
+                <li>L’Asso vale 1 oppure 11 nel modo più vantaggioso.</li>
+              </ul>
+
+              <h4>Abilità</h4>
+              <ul>
+                <li><strong>Jack:</strong> scopre una carta coperta dell’avversario.</li>
+                <li><strong>Donna:</strong> scambia una tua carta coperta con una carta dalla mano.</li>
+                <li><strong>Re:</strong> scopre una carta centrale coperta.</li>
+              </ul>
+
+              <h4>Punteggio</h4>
+              <ul>
+                <li>Vince la colonna chi ha il totale più alto senza superare il limite centrale.</li>
+                <li>In pareggio vince chi ha più carte dello stesso seme della centrale.</li>
+                <li>Se resta pareggio, nessuno prende il punto.</li>
+                <li>Quando viene scoperta la quinta centrale, l’avversario ha ancora un ultimo turno.</li>
+              </ul>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -2926,6 +3086,7 @@
       <button onclick="copyRoomCode()">Copia codice stanza</button>
       <p id="copyMessage"></p>
       <p>Manda questo codice al tuo amico e aspetta che entri.</p>
+      <p><small>La stanza resta valida per circa 24 ore.</small></p>
     </div>
 
     <div id="gameScreen" class="hidden">
@@ -3179,6 +3340,42 @@
 
     window.clearCurrentSession = clearCurrentSession;
 
+    const roomMaxAgeMs = 1000 * 60 * 60 * 24;
+
+    function isRoomExpired(state) {
+      const timestamp = state && (state.createdAt || state.updatedAt);
+      if (!timestamp) return false;
+      return Date.now() - timestamp > roomMaxAgeMs;
+    }
+
+    async function cleanupOldRooms() {
+      try {
+        const snapshot = await get(ref(db, 'rooms'));
+        if (!snapshot.exists()) return;
+
+        const rooms = snapshot.val();
+        const now = Date.now();
+        const removals = [];
+
+        for (const [code, state] of Object.entries(rooms)) {
+          const timestamp = state && (state.createdAt || state.updatedAt);
+          if (!timestamp) continue;
+
+          if (now - timestamp > roomMaxAgeMs) {
+            removals.push(remove(ref(db, `rooms/${code}`)));
+          }
+        }
+
+        if (removals.length > 0) {
+          await Promise.allSettled(removals);
+          console.log(`Pulizia stanze completata: ${removals.length} stanze vecchie rimosse.`);
+        }
+      } catch (error) {
+        console.warn('Pulizia stanze vecchie non riuscita:', error);
+      }
+    }
+
+
     function getPlayerName(fallback) {
       const mainInput = document.getElementById('playerNameInput');
       const joinInput = document.getElementById('playerNameInputJoin');
@@ -3247,7 +3444,9 @@
         winnerText: '',
         results: [],
         log: [],
-        leaderboardUpdated: false
+        leaderboardUpdated: false,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
       };
 
       for (let i = 0; i < 6; i++) {
@@ -3285,7 +3484,9 @@
         winnerText: '',
         results: [],
         log: [],
-        leaderboardUpdated: false
+        leaderboardUpdated: false,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
       };
 
       for (let i = 0; i < 6; i++) {
@@ -3304,6 +3505,8 @@
     }
 
     async function saveGame(newGame) {
+      if (newGame) newGame.updatedAt = Date.now();
+
       if (gameMode === 'singleplayer') {
         game = normalizeGameState(structuredClone(newGame));
         saveCurrentSession();
@@ -3382,6 +3585,13 @@
       }
 
       const state = snapshot.val();
+
+      if (isRoomExpired(state)) {
+        await remove(ref(db, `rooms/${code}`));
+        document.getElementById('lobbyMessage').textContent = 'Questa stanza è scaduta. Chiedi al tuo amico di crearne una nuova.';
+        return;
+      }
+
       if (state.players && state.players[1] && state.players[1].joined) {
         document.getElementById('lobbyMessage').textContent = 'La stanza è già piena.';
         return;
@@ -3683,6 +3893,13 @@
           return false;
         }
 
+        const restoredState = snapshot.val();
+        if (isRoomExpired(restoredState)) {
+          await remove(ref(db, `rooms/${roomId}`));
+          clearCurrentSession();
+          return false;
+        }
+
         listenRoom();
         return true;
       } catch (error) {
@@ -3748,6 +3965,8 @@
       state.finalTurnPlayer = state.finalTurnPlayer ?? null;
       state.lastPlayedColumnIndex = state.lastPlayedColumnIndex ?? null;
       state.leaderboardUpdated = !!state.leaderboardUpdated;
+      state.createdAt = state.createdAt || Date.now();
+      state.updatedAt = state.updatedAt || state.createdAt;
 
       for (let p = 0; p < 2; p++) {
         if (!state.players[p]) {
@@ -4827,6 +5046,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      cleanupOldRooms();
       restorePreviousSession();
     });
   </script>
