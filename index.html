@@ -2867,6 +2867,94 @@
       }
     }
 
+
+    /* ANIMAZIONE FINE PARTITA */
+    #resultScreen h1.final-winner-title {
+      animation: finalWinnerPop 0.7s cubic-bezier(.2,.9,.2,1) both;
+    }
+
+    .final-summary {
+      animation: finalSummaryIn 0.55s ease both;
+      animation-delay: 0.18s;
+      opacity: 0;
+    }
+
+    .final-card.reveal-step {
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+      animation: finalColumnReveal 0.55s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    .final-card.reveal-step::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+      transform: translateX(-120%);
+      animation: finalColumnShine 0.75s ease forwards;
+      animation-delay: inherit;
+      pointer-events: none;
+    }
+
+    @keyframes finalWinnerPop {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.92);
+        filter: blur(2px);
+      }
+      65% {
+        opacity: 1;
+        transform: translateY(0) scale(1.04);
+        filter: blur(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes finalSummaryIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes finalColumnReveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes finalColumnShine {
+      0% {
+        transform: translateX(-120%);
+      }
+      100% {
+        transform: translateX(120%);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .final-card.reveal-step {
+        animation-duration: 0.42s;
+      }
+
+      .final-card.reveal-step::after {
+        animation-duration: 0.55s;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -4960,7 +5048,7 @@
       }
 
       let html = `<h2>Fine partita</h2>`;
-      html += `<h1>${winnerText}</h1>`;
+      html += `<h1 class="final-winner-title">${winnerText}</h1>`;
 
       html += `
         <div class="final-summary">
@@ -4999,8 +5087,10 @@
           const p2Leader = r.winner === 1 ? 'leader' : '';
           const winnerBoxClass = r.winner === null || r.winner === undefined ? 'final-winner final-none' : 'final-winner';
 
+          const revealDelay = 0.45 + (Number(r.column || 1) - 1) * 0.22;
+
           html += `
-            <div class="final-card ${cardClass}">
+            <div class="final-card ${cardClass} reveal-step" style="animation-delay: ${revealDelay}s;">
               <h3>Colonna ${r.column}</h3>
               <div style="text-align:center;">
                 <span class="final-badge ${badgeClass}">${badgeText}</span>
