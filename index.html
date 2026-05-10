@@ -765,6 +765,37 @@
       border-color: rgba(239,68,68,0.50);
     }
 
+
+    body.theme-regale .side-rules-dropdown summary {
+      background: #E4C45E;
+      color: #291E13;
+    }
+
+    body.theme-regale .side-rules-dropdown .rules-dropdown-content {
+      background: rgba(41,30,19,0.97);
+      border-color: rgba(228,196,94,0.28);
+    }
+
+    body.theme-notturno .side-rules-dropdown summary {
+      background: #0E7490;
+      color: #F8FAFC;
+    }
+
+    body.theme-notturno .side-rules-dropdown .rules-dropdown-content {
+      background: rgba(11,19,43,0.97);
+      border-color: rgba(216,222,233,0.22);
+    }
+
+    body.theme-aurora .side-rules-dropdown summary {
+      background: #F2C14E;
+      color: #2D1B4E;
+    }
+
+    body.theme-aurora .side-rules-dropdown .rules-dropdown-content {
+      background: rgba(45,27,78,0.97);
+      border-color: rgba(242,193,78,0.24);
+    }
+
     /* TEMA NOTTURNO */
     body.theme-notturno {
       background:
@@ -1412,6 +1443,127 @@
     .hand-spacer { width: 170px; }
     .hand-main { min-width: 0; text-align: center; }
 
+    .room-action-box {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 8px;
+      min-width: 170px;
+    }
+
+    .room-action-box button {
+      width: 150px;
+      min-height: 50px;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    .side-rules-dropdown {
+      width: 150px;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      border: none;
+      position: relative;
+    }
+
+    .side-rules-dropdown summary {
+      min-height: 50px;
+      border-radius: 14px;
+      background: #facc15;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      font-weight: 900;
+      list-style: none;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+
+    .side-rules-dropdown summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .side-rules-dropdown summary::after {
+      content: '▾';
+      margin-left: 6px;
+      font-size: 12px;
+    }
+
+    .side-rules-dropdown[open] summary::after {
+      content: '▴';
+    }
+
+    .side-rules-dropdown .rules-dropdown-content {
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 8px);
+      width: min(360px, 88vw);
+      max-height: 420px;
+      overflow-y: auto;
+      z-index: 30;
+      background: rgba(5,46,22,0.96);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 18px 34px rgba(0,0,0,0.35);
+    }
+
+    .room-action-box .side-rules-dropdown,
+    .room-action-box .leave-room-btn,
+    .room-action-box .delete-room-btn {
+      width: 150px;
+      align-self: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .room-action-box .side-rules-dropdown summary,
+    .room-action-box .leave-room-btn,
+    .room-action-box .delete-room-btn {
+      height: 50px;
+      min-height: 50px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .room-action-box .leave-room-btn,
+    .room-action-box .delete-room-btn {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+
+
+    .leave-room-btn {
+      background: rgba(255,255,255,0.86);
+      color: #1f2937;
+    }
+
+    .delete-room-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .turn-under-hand {
+      margin-top: 10px;
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .turn-under-hand h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+
     .turn-button-box {
       display: flex;
       align-items: center;
@@ -1969,6 +2121,59 @@
         border-radius: 10px;
       }
 
+      .room-action-box {
+        min-width: 0;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+
+      .room-action-box button,
+      .side-rules-dropdown,
+      .side-rules-dropdown summary {
+        width: 100%;
+        min-height: 38px;
+        font-size: 12px;
+        border-radius: 10px;
+        padding: 6px;
+      }
+
+      .side-rules-dropdown .rules-dropdown-content {
+        left: 0;
+        bottom: calc(100% + 6px);
+        width: min(330px, 92vw);
+        max-height: 300px;
+        font-size: 11px;
+      }
+
+      .room-action-box .side-rules-dropdown,
+      .room-action-box .leave-room-btn,
+      .room-action-box .delete-room-btn {
+        width: 100%;
+        align-self: stretch;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .room-action-box .side-rules-dropdown summary,
+      .room-action-box .leave-room-btn,
+      .room-action-box .delete-room-btn {
+        height: 38px;
+        min-height: 38px;
+      }
+
+
+      .turn-under-hand {
+        margin-top: 6px;
+        padding-top: 6px;
+      }
+
+      .turn-under-hand h2 {
+        font-size: 16px;
+      }
+
+
       .log {
         display: none;
       }
@@ -2236,68 +2441,71 @@
     </div>
 
     <div id="gameScreen" class="hidden">
-      <div class="status-box">
-        <h2 id="turnTitle">Turno del Giocatore 1</h2>
+      <div class="hidden">
         <p id="playerText"></p>
-        <p id="phaseText">Scegli una carta dalla tua mano.</p>
-        <p>Stanza: <strong id="roomCodeInGame"></strong> | Mazzo: <span id="deckCount">0</span> carte | Scarti: <span id="discardCount">0</span></p>
-        <button onclick="leaveRoom()">Abbandona stanza</button>
-        <button id="deleteRoomBtn" onclick="deleteRoom()" class="hidden">Elimina stanza</button>
-      </div>
-
-      <div class="actions top-actions">
-        <p><strong>Carte normali:</strong> seleziona una carta, poi clicca la tua zona in una colonna per posizionarla coperta.</p>
-        <p><strong>Abilità:</strong> seleziona J, Q o K e clicca direttamente il bersaglio dell’abilità.</p>
-
-        <details class="rules-dropdown">
-          <summary>Regolamento partita</summary>
-          <div class="rules-dropdown-content">
-            <h4>Turno</h4>
-            <ul>
-              <li>Nel tuo turno scegli: posizioni una carta oppure usi una carta abilità.</li>
-              <li>Le carte posizionate vengono messe sempre coperte.</li>
-              <li>Dopo aver posizionato una carta puoi scoprire solo la centrale della stessa colonna.</li>
-            </ul>
-
-            <h4>Valori</h4>
-            <ul>
-              <li>2-10 valgono il loro numero.</li>
-              <li>Jack, Donna e Re valgono 10.</li>
-              <li>L’Asso vale 1 oppure 11 nel modo più vantaggioso.</li>
-            </ul>
-
-            <h4>Abilità</h4>
-            <ul>
-              <li><strong>Jack:</strong> scopre una carta coperta dell’avversario.</li>
-              <li><strong>Donna:</strong> scambia una tua carta coperta con una carta dalla mano.</li>
-              <li><strong>Re:</strong> scopre una carta centrale coperta.</li>
-              <li>Dopo un’abilità, la figura viene scartata, peschi e il turno termina.</li>
-            </ul>
-
-            <h4>Punteggio</h4>
-            <ul>
-              <li>Vince la colonna chi ha il totale più alto senza superare la carta centrale.</li>
-              <li>Se entrambi superano, nessuno prende il punto.</li>
-              <li>In pareggio vince chi ha più carte dello stesso seme della carta centrale.</li>
-              <li>Se resta pareggio, nessuno prende il punto.</li>
-              <li>Quando viene scoperta la quinta centrale, l’avversario ha ancora un ultimo turno.</li>
-            </ul>
-          </div>
-        </details>
+        <p id="phaseText"></p>
+        <span id="roomCodeInGame"></span>
+        <span id="deckCount">0</span>
+        <span id="discardCount">0</span>
       </div>
 
       <div id="columns" class="columns"></div>
 
       <div class="hand">
         <div class="hand-row">
-          <div class="hand-spacer"></div>
+          <div class="room-action-box">
+            <details class="rules-dropdown side-rules-dropdown">
+              <summary>Regolamento partita</summary>
+              <div class="rules-dropdown-content">
+                <h4>Turno</h4>
+                <ul>
+                  <li>Nel tuo turno scegli: posizioni una carta oppure usi una carta abilità.</li>
+                  <li>Le carte posizionate vengono messe sempre coperte.</li>
+                  <li>Dopo aver posizionato una carta puoi scoprire solo la centrale della stessa colonna.</li>
+                </ul>
+
+                <h4>Valori</h4>
+                <ul>
+                  <li>2-10 valgono il loro numero.</li>
+                  <li>Jack, Donna e Re valgono 10.</li>
+                  <li>L’Asso vale 1 oppure 11 nel modo più vantaggioso.</li>
+                </ul>
+
+                <h4>Abilità</h4>
+                <ul>
+                  <li><strong>Jack:</strong> scopre una carta coperta dell’avversario.</li>
+                  <li><strong>Donna:</strong> scambia una tua carta coperta con una carta dalla mano.</li>
+                  <li><strong>Re:</strong> scopre una carta centrale coperta.</li>
+                  <li>Dopo un’abilità, la figura viene scartata, peschi e il turno termina.</li>
+                </ul>
+
+                <h4>Punteggio</h4>
+                <ul>
+                  <li>Vince la colonna chi ha il totale più alto senza superare la carta centrale.</li>
+                  <li>Se entrambi superano, nessuno prende il punto.</li>
+                  <li>In pareggio vince chi ha più carte dello stesso seme della carta centrale.</li>
+                  <li>Se resta pareggio, nessuno prende il punto.</li>
+                  <li>Quando viene scoperta la quinta centrale, l’avversario ha ancora un ultimo turno.</li>
+                </ul>
+              </div>
+            </details>
+
+            <button class="leave-room-btn" onclick="leaveRoom()">Abbandona stanza</button>
+            <button id="deleteRoomBtn" class="delete-room-btn hidden" onclick="deleteRoom()">Elimina stanza</button>
+          </div>
+
           <div class="hand-main">
             <h3 id="handTitle">La tua mano</h3>
             <div id="handCards"></div>
           </div>
+
           <div class="turn-button-box">
             <button id="endTurnBtn" onclick="endTurnOrSkipReveal()" disabled>Fine turno</button>
           </div>
+        </div>
+
+        <div class="turn-under-hand">
+          <h2 id="turnTitle">Turno del Giocatore 1</h2>
         </div>
       </div>
 
@@ -3042,8 +3250,8 @@
       const turnName = game.players[game.currentPlayer].name;
       const mine = game.players[myPlayer].name;
 
-      document.getElementById('turnTitle').textContent = `Turno di ${turnName}`;
-      document.getElementById('playerText').textContent = `Tu sei ${mine}. ${isMyTurn() ? 'È il tuo turno.' : 'Aspetta la mossa dell’avversario.'}`;
+      document.getElementById('turnTitle').textContent = isComputerTurn() ? 'Turno del PC' : `Turno di ${turnName}`;
+      document.getElementById('playerText').textContent = '';
       document.getElementById('handTitle').textContent = `Mano ${mine}`;
       document.getElementById('roomCodeInGame').textContent = roomId;
       document.getElementById('deckCount').textContent = game.deck ? game.deck.length : 0;
